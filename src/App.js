@@ -5,6 +5,7 @@ const App = () => {
   const [theyString, setTheyString] = useState("Hope you are having a good day")
   const [youString, setYouString] = useState("")
   
+  //keep the input value and youString in sync
   const changeInputHandler = (event) => {
     setYouString(event.target.value)
   }
