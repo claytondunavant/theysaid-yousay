@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './css/App.css'
 
 const App = () => {
+
   const [theyString, setTheyString] = useState("Hope you are having a good day")
   const [youString, setYouString] = useState("")
   
@@ -25,8 +26,12 @@ const App = () => {
 
   return (
     <div className="center">
+
       <h1>They Said:</h1>
-      <h2>{theyString}</h2>
+      <h2>"{theyString}"</h2>
+      <h3 className="quote">- them</h3>
+    
+      <hr />
 
       <h1>You Say:</h1>
 
