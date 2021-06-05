@@ -1,48 +1,58 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import quoteService from './services/quotes'
 import './css/App.css'
 
 const App = () => {
 
-  const [theyString, setTheyString] = useState("")
-  const [youString, setYouString] = useState("")
+  const [theyQuote, setTheyQuote] = useState({})
+  const [youQuoteContent, setYouQuoteContent] = useState('')
+  
+  //EFFECTS
+  
+  const getLatestTheyQuote = () => {
+    quoteService
+      .getLatest()
+      .then(latestQuote => {
+        setTheyQuote(latestQuote)
+      })
+  }
+  
+  //only runs once when page is loaded?
+  useEffect(getLatestTheyQuote, [])
+  
+  //FUNCTIONS
   
   //keep the input value and youString in sync
   const changeInputHandler = (event) => {
-    setYouString(event.target.value)
+    setYouQuoteContent(event.target.value)
   }
   
   const sumbitHandler = (event) => {
     //prevent page reloading
     event.preventDefault()
     
-    //create newQuote to send
-    //date isnt necessary because it will be written by backend
-    const quoteObject = {
-      content: youString
+    const youQuote = {
+      content: youQuoteContent
     }
 
-    //send new quote
+    //send new quote to backend
+    //set returned quote to theyQuote
+    //reset youQuoteContent
     quoteService
-      .create(quoteObject)
-
-    //set youString to nothing
-    setYouString("")
+      .create(youQuote)
+      .then(returnedNote => {
+        setTheyQuote(returnedNote)
+        setYouQuoteContent('')
+      })
     
     //close window?
   }
-  
-  quoteService
-    .getLatest()
-    .then(latestQuote => {
-      setTheyString(latestQuote.content)
-    })
 
   return (
     <div className="center">
 
       <h1>They Said:</h1>
-      <h2>"{theyString}"</h2>
+      <h2>"{theyQuote.content}"</h2>
       <h3 className="quote">- them</h3>
     
       <hr />
@@ -51,7 +61,7 @@ const App = () => {
 
       <form onSubmit={sumbitHandler}>
         <input
-          value={youString}
+          value={youQuoteContent}
           onChange={changeInputHandler}
         >
         </input>
