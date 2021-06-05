@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import quoteService from './services/quotes'
 import './css/App.css'
 
 const App = () => {
 
-  const [theyString, setTheyString] = useState("Hope you are having a good day")
+  const [theyString, setTheyString] = useState("")
   const [youString, setYouString] = useState("")
   
   //keep the input value and youString in sync
@@ -15,14 +16,27 @@ const App = () => {
     //prevent page reloading
     event.preventDefault()
     
-    //set theyString to youString
-    setTheyString(youString)
+    //create newQuote to send
+    //date isnt necessary because it will be written by backend
+    const quoteObject = {
+      content: youString
+    }
+
+    //send new quote
+    quoteService
+      .create(quoteObject)
 
     //set youString to nothing
     setYouString("")
     
     //close window?
   }
+  
+  quoteService
+    .getLatest()
+    .then(latestQuote => {
+      setTheyString(latestQuote.content)
+    })
 
   return (
     <div className="center">
