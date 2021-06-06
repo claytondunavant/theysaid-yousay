@@ -5,9 +5,12 @@ const app = express()
 //install cors
 const cors = require('cors')
 
-//middle ware
+//MIDDLE WARE
 //allows use of json-parse
 app.use(express.json())
+//allow the ability to serve static files
+//checks build for first for what HTTP is asking for
+app.use(express.static('build'))
 app.use(cors())
 
 //DEV DATA

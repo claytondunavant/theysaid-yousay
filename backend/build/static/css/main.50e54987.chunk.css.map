@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/css/App.css"],"names":[],"mappings":"AAAA,QACI,iBACJ,CAEA,OACI,iBACJ","file":"main.50e54987.chunk.css","sourcesContent":[".center {\n    text-align: center;\n}\n\n.quote {\n    margin-left: 300px;\n}"]}

@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/api/quotes'
+//both frontend and backend have same address
+const baseUrl = '/api/quotes'
 
 //get the latest quote
 //can stack thens because they return promises
