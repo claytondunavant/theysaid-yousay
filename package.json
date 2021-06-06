@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
 	"build:ui": "cd backend && rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend && cd ..",
-	"start" : "npm run build:ui && cd backend && npm start",
+	"start" : "npm run build:ui && cd backend && npm install && npm start",
 	"test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
