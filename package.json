@@ -4,8 +4,8 @@
   "description": "you have a message",
   "main": "index.js",
   "scripts": {
-	"build:ui": "cd backend && rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend && cd ..",
-	"start" : "cd backend && npm start",
+	"build:ui": "cd backend && rm -rf build && cd ../frontend && npm install && npm run build --prod && cp -r build ../backend && cd ..",
+	"start" : "cd backend && npm install && npm start",
   "postinstall": "npm run build:ui",
 	"test": "echo \"Error: no test specified\" && exit 1"
   },
