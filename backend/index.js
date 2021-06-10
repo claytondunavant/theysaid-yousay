@@ -1,17 +1,46 @@
-//import express
+//IMPORTS
+
 const { response } = require('express')
 const express = require('express')
 const app = express()
 //install cors
 const cors = require('cors')
+//install mongoose
+const mongoose = require('mongoose')
+//bring in env variables
+require('dotenv').config()
+
 
 //MIDDLE WARE
+
 //allows use of json-parse
 app.use(express.json())
 //allow the ability to serve static files
 //checks build for first for what HTTP is asking for
 app.use(express.static('build'))
 app.use(cors())
+
+//CONNECT TO DB
+const url= process.env.MONGODB_TESTING_URI
+
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+
+const quoteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+})
+
+const Quote = mongoose.model('Quote', quoteSchema)
+
+/*const quote = new Quote({
+    content: 'test data number 2',
+    date: new Date(),
+})
+
+quote.save().then(result => {
+    console.log('note saved!')
+    mongoose.connection.close()
+})*/
 
 //DEV DATA
 
@@ -82,7 +111,7 @@ app.post('/api/quotes', (request, response) => {
 
 ////RUN SERVER
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)    
 })
