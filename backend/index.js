@@ -5,11 +5,10 @@ const express = require('express')
 const app = express()
 //install cors
 const cors = require('cors')
-//install mongoose
-const mongoose = require('mongoose')
 //bring in env variables
 require('dotenv').config()
-
+//import the mongodb model for a quote
+const Quote = require('./models/quote')
 
 //MIDDLE WARE
 
@@ -20,68 +19,14 @@ app.use(express.json())
 app.use(express.static('build'))
 app.use(cors())
 
-//CONNECT TO DB
-const url= process.env.MONGODB_TESTING_URI
-
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-
-const quoteSchema = new mongoose.Schema({
-    content: String,
-    date: Date,
-})
-
-const Quote = mongoose.model('Quote', quoteSchema)
-
-/*const quote = new Quote({
-    content: 'test data number 2',
-    date: new Date(),
-})
-
-quote.save().then(result => {
-    console.log('note saved!')
-    mongoose.connection.close()
-})*/
-
-//DEV DATA
-
-let quotes = [
-    {
-        id: 1,
-        content: "hope you have a good day",
-        date: "2019-05-30T17:30:31.098Z",
-    },
-    {
-        id: 2,
-        content: "you too!",
-        date: "2019-05-30T18:39:34.091Z",
-    },
-]
-
-//FUNCTONS
-
-const getMaxId = () => {
-    const maxId = quotes.length > 0
-        ? Math.max(...quotes.map(n => n.id))
-        : 0
-    return maxId
-}
-
-const generateId = () => {
-    return getMaxId() + 1
-}
-
 ////ROUTES
-
-//get all the quotes
-//REMOVE IN PRODUCTION
-app.get('/api/quotes', (request, response) => {
-    response.send(quotes)
-})
 
 //peek most recent quote
 //GET latest
 app.get('/api/quotes/latest', (request, response) => {
-    response.send(quotes[getMaxId() - 1])
+    Quote.find().limit(1).sort({$natural:-1}).then(result => {
+        response.json(result[0])    
+    })
 })
 
 //push new quote
@@ -96,17 +41,17 @@ app.post('/api/quotes', (request, response) => {
         })
     }
     
-    //make quote to add to db
-    const quote = {
-        id: generateId(),
+    //make new quote with MongoDB quote schema
+    const quote = new Quote({
         content: body.content,
         date: new Date(),
-    }
+    })
     
-    //add quote to quotes
-    quotes = quotes.concat(quote)
+    //save note to MongoDB
+    quote.save().then(savedNote => {
+        response.json(savedNote)
+    })
     
-    response.json(quote)
 })
 
 ////RUN SERVER
